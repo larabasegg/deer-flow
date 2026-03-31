@@ -1,0 +1,10 @@
+{
+  "name": "subagent-concurrency-execution",
+  "description": "Prevents deadlocks, silent work loss, and async failures when running concurrent subagents in a thread pool. TRIGGER when: building a multi-agent system with concurrent subagent execution, subagent tasks silently disappearing or never executing, adding async tool support to thread-pool-based agent executors, limiting the number of concurrent subagent invocations.",
+  "author": "Bytedance Inc",
+  "repository": "deer-flow",
+  "category": ["execution-control", "architecture"],
+  "source": "external https://github.com/bytedance/deer-flow.git",
+  "commit_date": "31-03-2026",
+  "source_hash": "64e0f53"
+}

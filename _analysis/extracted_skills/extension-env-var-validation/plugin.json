@@ -1,0 +1,10 @@
+{
+  "name": "extension-env-var-validation",
+  "description": "Prevents silently misconfigured extensions when env var placeholders in plugin config resolve to empty string at load time. TRIGGER when: adding env var references to MCP server or plugin configs, designing config resolution for user-supplied extension manifests, choosing between fail-fast and silent-fallback for missing environment variables in optional integrations.",
+  "author": "Bytedance Inc",
+  "repository": "deer-flow",
+  "category": ["operations-deployment", "security"],
+  "source": "external https://github.com/bytedance/deer-flow.git",
+  "commit_date": "31-03-2026",
+  "source_hash": "64e0f53"
+}

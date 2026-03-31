@@ -1,0 +1,10 @@
+{
+  "name": "gemini-thinking-gateway-signature",
+  "description": "Gemini thinking models via OpenAI-compatible gateway: failure modes when routing Gemini thinking-enabled models through LangChain's ChatOpenAI and an OpenAI-compatible proxy. TRIGGER when: using Gemini thinking models via an OpenAI-compatible gateway, routing any model with thinking/reasoning content blocks through LangChain ChatOpenAI, debugging HTTP 400 errors on multi-turn conversations that include tool calls.",
+  "author": "Bytedance Inc",
+  "repository": "deer-flow",
+  "category": ["networking", "tools"],
+  "source": "external https://github.com/bytedance/deer-flow.git",
+  "commit_date": "31-03-2026",
+  "source_hash": "64e0f53"
+}

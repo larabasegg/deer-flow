@@ -1,0 +1,6 @@
+mode: agentic
+extended: true
+completed: analyze-agent-codebase, extract-skills, mine-design, synthesize-decisions
+next:
+remaining:
+published: false

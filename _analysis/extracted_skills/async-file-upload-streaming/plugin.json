@@ -1,0 +1,10 @@
+{
+  "name": "async-file-upload-streaming",
+  "description": "Prevents gateway memory exhaustion and event loop blocking when handling large file uploads in async web frameworks. TRIGGER when: implementing a file upload endpoint in an async web framework (FastAPI, aiohttp, Django Channels, or similar), choosing between reading the full body vs chunked streaming for file ingestion, adding file size limits to an async upload handler.",
+  "author": "Bytedance Inc",
+  "repository": "deer-flow",
+  "category": ["security"],
+  "source": "external https://github.com/bytedance/deer-flow.git",
+  "commit_date": "31-03-2026",
+  "source_hash": "64e0f53"
+}

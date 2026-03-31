@@ -1,0 +1,10 @@
+{
+  "name": "langgraph-server-invocation-context",
+  "description": "LangGraph Server invocation context: failure modes when reading thread_id, user_id, or other configurable fields inside a LangGraph agent deployed behind LangGraph Server. TRIGGER when: writing middleware or tools that access thread_id or user_id, deploying a LangGraph agent via LangGraph Server (not direct Python invocation), debugging silent failures where context reads return None in server mode but work locally.",
+  "author": "Bytedance Inc",
+  "repository": "deer-flow",
+  "category": ["execution-control", "operations-deployment"],
+  "source": "external https://github.com/bytedance/deer-flow.git",
+  "commit_date": "31-03-2026",
+  "source_hash": "64e0f53"
+}

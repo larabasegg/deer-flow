@@ -1,0 +1,10 @@
+{
+  "name": "agent-memory-content-corruption",
+  "description": "Prevents agent long-term memory from being degraded by session-scoped references, low-confidence LLM extractions, and cross-agent or cross-user contamination. TRIGGER when: building persistent memory for a multi-turn agent, memory retrieved in future sessions contains stale or invalid references, agent performance degrades as memory grows, deploying an agent in a multi-user or multi-agent environment.",
+  "author": "Bytedance Inc",
+  "repository": "deer-flow",
+  "category": ["state-memory"],
+  "source": "external https://github.com/bytedance/deer-flow.git",
+  "commit_date": "31-03-2026",
+  "source_hash": "64e0f53"
+}

@@ -1,0 +1,10 @@
+{
+  "name": "langgraph-client-thread-persistence",
+  "description": "Prevents multi-turn conversation amnesia when a LangGraph client accepts thread_id but has no checkpointer configured. TRIGGER when: implementing a LangGraph client that accepts thread_id, building a multi-turn conversation interface on top of a LangGraph graph, choosing whether to configure a checkpointer for a stateful agent client.",
+  "author": "Bytedance Inc",
+  "repository": "deer-flow",
+  "category": ["state-memory", "architecture"],
+  "source": "external https://github.com/bytedance/deer-flow.git",
+  "commit_date": "31-03-2026",
+  "source_hash": "64e0f53"
+}

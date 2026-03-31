@@ -1,0 +1,10 @@
+{
+  "name": "langgraph-subgraph-checkpoint-filter",
+  "description": "Prevents phantom thread entries when listing threads from the LangGraph checkpointer in deployments with hierarchical agent graphs. TRIGGER when: implementing thread listing from a LangGraph checkpointer, building a thread index or search feature over LangGraph state, designing a system that uses sub-graphs or parallel node execution within a parent LangGraph graph.",
+  "author": "Bytedance Inc",
+  "repository": "deer-flow",
+  "category": ["state-memory", "architecture"],
+  "source": "external https://github.com/bytedance/deer-flow.git",
+  "commit_date": "31-03-2026",
+  "source_hash": "64e0f53"
+}

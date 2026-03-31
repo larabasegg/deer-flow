@@ -1,0 +1,10 @@
+{
+  "name": "safe-archive-extraction",
+  "description": "Prevents path traversal, ZIP bomb, and symlink attacks when extracting user-supplied ZIP archives. TRIGGER when: implementing archive extraction for user-uploaded files, building a plugin or extension installer that accepts ZIP packages, designing any feature that extracts archives from untrusted sources.",
+  "author": "Bytedance Inc",
+  "repository": "deer-flow",
+  "category": ["security", "tools"],
+  "source": "external https://github.com/bytedance/deer-flow.git",
+  "commit_date": "31-03-2026",
+  "source_hash": "64e0f53"
+}

@@ -1,0 +1,10 @@
+{
+  "name": "large-tool-registry-deferred-schema",
+  "description": "Prevents context window inflation and tool selection degradation when an agent connects to many tools. TRIGGER when: registering more than 10-15 tools in any agent tool system (MCP servers, OpenAI function calling, Anthropic tool_use, custom registries), noticing degraded tool selection accuracy as the tool set grows, context costs increasing disproportionately with each new tool added, adding dynamic tool discovery to a large-tool-set agent.",
+  "author": "Bytedance Inc",
+  "repository": "deer-flow",
+  "category": ["state-memory", "architecture"],
+  "source": "external https://github.com/bytedance/deer-flow.git",
+  "commit_date": "31-03-2026",
+  "source_hash": "64e0f53"
+}

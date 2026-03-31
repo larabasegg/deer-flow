@@ -1,0 +1,10 @@
+{
+  "name": "docker-compose-env-precedence",
+  "description": "Docker Compose environment variable precedence: failure modes when mixing the environment section and env_file for the same variable. TRIGGER when: writing docker-compose.yml with both environment and env_file sections, using ${VAR:-default} syntax in an environment section, debugging why .env overrides are silently ignored at docker compose up.",
+  "author": "Bytedance Inc",
+  "repository": "deer-flow",
+  "category": ["operations-deployment"],
+  "source": "external https://github.com/bytedance/deer-flow.git",
+  "commit_date": "31-03-2026",
+  "source_hash": "64e0f53"
+}

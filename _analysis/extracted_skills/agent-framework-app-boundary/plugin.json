@@ -1,0 +1,10 @@
+{
+  "name": "agent-framework-app-boundary",
+  "description": "Keeps agent framework code decoupled from application layer code and ensures cross-process config changes propagate without restarts. TRIGGER when: packaging an agent framework for embedded or library use, deploying an agent framework and API gateway as separate processes, debugging stale tool configs that don't update after config edits, ensuring config changes in one process are visible to another without restart.",
+  "author": "larabasegg",
+  "repository": "deer-flow",
+  "category": ["architecture", "operations-deployment"],
+  "source": "external https://github.com/bytedance/deer-flow.git",
+  "commit_date": "31-03-2026",
+  "source_hash": "64e0f53"
+}

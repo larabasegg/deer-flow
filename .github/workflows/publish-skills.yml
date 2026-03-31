@@ -1,0 +1,143 @@
+# Validates and publishes extracted skills to the Lens registry as a PR/MR.
+# Triggered on any push to main that touches _analysis/extracted_skills/.
+#
+# Required secret:
+#   REGISTRY_TOKEN — GitHub Classic PAT (ghp_* / github_pat_*, scope: repo)
+#                 OR GitLab PAT (glpat-*, scope: api)
+#
+# Required if using a GitLab token:
+#   REGISTRY_GITLAB_HOST — GitLab hostname, e.g. gitlab.com
+
+name: Publish Skills
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '_analysis/extracted_skills/**'
+
+jobs:
+  validate-skills:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate extracted skills
+        run: |
+          if [ ! -d "_analysis/extracted_skills" ] || [ -z "$(ls -A _analysis/extracted_skills/ 2>/dev/null)" ]; then
+            echo "No skills found, skipping"; exit 0
+          fi
+          ERRORS=0
+          for dir in _analysis/extracted_skills/*/; do
+            SKILL_NAME=$(basename "$dir")
+            if [ ! -f "$dir/plugin.json" ] || [ ! -f "$dir/SKILL.md" ]; then
+              echo "MISSING: $SKILL_NAME/plugin.json or SKILL.md"
+              ERRORS=$((ERRORS + 1)); continue
+            fi
+            python3 -c "
+          import json, sys
+          VALID_CATEGORIES = [
+            'architecture','execution-control','state-memory','persistence',
+            'networking','tools','RAG','data-learning','security',
+            'monitoring-evaluation','operations-deployment'
+          ]
+          data = json.load(open('${dir}plugin.json'))
+          for f in ['name','description','repository','category']:
+              if f not in data: print(f'INVALID: {f} missing in $SKILL_NAME'); sys.exit(1)
+          cat = data['category']
+          if not isinstance(cat,list) or not cat:
+              print('INVALID: category must be a non-empty array in $SKILL_NAME'); sys.exit(1)
+          for c in cat:
+              if c not in VALID_CATEGORIES:
+                  print(f'INVALID: unknown category {c} in $SKILL_NAME'); sys.exit(1)
+          print('OK: $SKILL_NAME')
+          " || ERRORS=$((ERRORS + 1))
+          done
+          [ "$ERRORS" -eq 0 ] || { echo "Validation failed with $ERRORS error(s)"; exit 1; }
+
+  publish-skills:
+    needs: validate-skills
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Publish skills to Lens registry
+        env:
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+          REGISTRY_GITLAB_HOST: ${{ secrets.REGISTRY_GITLAB_HOST }}
+          REGISTRY_REPO: ProsusAI/Lens
+          GH_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          if [ ! -d "_analysis/extracted_skills" ] || [ -z "$(ls -A _analysis/extracted_skills/ 2>/dev/null)" ]; then
+            echo "No skills found, skipping"; exit 0
+          fi
+
+          # Detect platform from token format
+          case "$REGISTRY_TOKEN" in
+            ghp_*|github_pat_*) PLATFORM="github" ;;
+            glpat-*)            PLATFORM="gitlab" ;;
+            *) echo "ERROR: Cannot detect platform from REGISTRY_TOKEN format." && exit 1 ;;
+          esac
+          echo "Platform: $PLATFORM"
+
+          TEMP_DIR=$(mktemp -d)
+
+          if [ "$PLATFORM" = "github" ]; then
+            git clone --depth 1 \
+              "https://x-access-token:${REGISTRY_TOKEN}@github.com/${REGISTRY_REPO}.git" \
+              "$TEMP_DIR/registry"
+          else
+            GITLAB_HOST="${REGISTRY_GITLAB_HOST:-gitlab.com}"
+            git clone --depth 1 \
+              "https://oauth2:${REGISTRY_TOKEN}@${GITLAB_HOST}/${REGISTRY_REPO}.git" \
+              "$TEMP_DIR/registry"
+          fi
+
+          FIRST_PLUGIN=$(find _analysis/extracted_skills -name plugin.json -print -quit)
+          REPO_NAME=$(python3 -c "import json; print(json.load(open('${FIRST_PLUGIN}'))['repository'])")
+
+          SKILL_COUNT=0
+          for dir in _analysis/extracted_skills/*/; do
+            [ -f "$dir/plugin.json" ] && [ -f "$dir/SKILL.md" ] || continue
+            SKILL_NAME=$(basename "$dir")
+            mkdir -p "$TEMP_DIR/registry/skills/$REPO_NAME/$SKILL_NAME"
+            cp "$dir/plugin.json" "$dir/SKILL.md" \
+              "$TEMP_DIR/registry/skills/$REPO_NAME/$SKILL_NAME/"
+            SKILL_COUNT=$((SKILL_COUNT + 1))
+          done
+          [ "$SKILL_COUNT" -gt 0 ] || { echo "No valid skills found"; rm -rf "$TEMP_DIR"; exit 0; }
+
+          cd "$TEMP_DIR/registry"
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          BRANCH="skills/${REPO_NAME}/$(date +%Y%m%d)-${GITHUB_RUN_ID}"
+          git checkout -b "$BRANCH"
+          git add skills/
+          if git diff --staged --quiet; then
+            echo "No changes to publish"; rm -rf "$TEMP_DIR"; exit 0
+          fi
+          git commit -m "Add ${SKILL_COUNT} skill(s) from ${REPO_NAME}"
+          git push -u origin "$BRANCH"
+
+          if [ "$PLATFORM" = "github" ]; then
+            gh pr create \
+              --repo "${REGISTRY_REPO}" \
+              --base main \
+              --head "$BRANCH" \
+              --title "Add ${SKILL_COUNT} skill(s) from ${REPO_NAME}" \
+              --body "Automated publish from ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"
+          else
+            GITLAB_HOST="${REGISTRY_GITLAB_HOST:-gitlab.com}"
+            PROJECT_ENCODED=$(python3 -c "import urllib.parse; print(urllib.parse.quote('${REGISTRY_REPO}', safe=''))")
+            curl --silent --fail --show-error \
+              --header "PRIVATE-TOKEN: ${REGISTRY_TOKEN}" \
+              --header "Content-Type: application/json" \
+              --data "{\"source_branch\":\"${BRANCH}\",\"target_branch\":\"main\",\"title\":\"Add ${SKILL_COUNT} skill(s) from ${REPO_NAME}\",\"description\":\"Automated publish from ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}\"}" \
+              "https://${GITLAB_HOST}/api/v4/projects/${PROJECT_ENCODED}/merge_requests"
+          fi
+
+          rm -rf "$TEMP_DIR"

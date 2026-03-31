@@ -1,0 +1,10 @@
+{
+  "name": "agent-memory-persistence",
+  "description": "Ensures agent memory writes are non-blocking and crash-safe in production. TRIGGER when: adding persistent memory to a multi-turn agent, memory updates slowing agent response times, agent memory files corrupted after process crash or restart, debugging partial writes or JSON parse errors in memory storage.",
+  "author": "Bytedance Inc",
+  "repository": "deer-flow",
+  "category": ["state-memory", "persistence"],
+  "source": "external https://github.com/bytedance/deer-flow.git",
+  "commit_date": "31-03-2026",
+  "source_hash": "64e0f53"
+}

@@ -1,0 +1,10 @@
+{
+  "name": "agent-message-history-middleware",
+  "description": "Maintains message history invariants required by LLM APIs when middleware injects or repairs messages mid-conversation. TRIGGER when: building middleware that injects messages into an ongoing conversation, handling agent interruption or cancellation that leaves tool calls without responses, injecting warnings or status messages mid-conversation across multiple LLM providers.",
+  "author": "Bytedance Inc",
+  "repository": "deer-flow",
+  "category": ["execution-control", "state-memory"],
+  "source": "external https://github.com/bytedance/deer-flow.git",
+  "commit_date": "31-03-2026",
+  "source_hash": "64e0f53"
+}

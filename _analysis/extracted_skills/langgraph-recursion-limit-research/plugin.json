@@ -1,0 +1,10 @@
+{
+  "name": "langgraph-recursion-limit-research",
+  "description": "Prevents silent task truncation when a research or multi-step agent hits LangGraph's default recursion limit mid-task. TRIGGER when: configuring run parameters for a LangGraph agent that uses multi-step tool calls, setting up a research or planning agent with web search or code execution tools, tuning LangGraph runtime behavior for production workloads.",
+  "author": "Bytedance Inc",
+  "repository": "deer-flow",
+  "category": ["execution-control", "architecture"],
+  "source": "external https://github.com/bytedance/deer-flow.git",
+  "commit_date": "31-03-2026",
+  "source_hash": "64e0f53"
+}
